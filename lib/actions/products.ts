@@ -4,27 +4,69 @@ import { createAdminClient } from "@/lib/supabase";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { productFormSchema, ProductFormData, Product } from "@/lib/types";
+import {
+  requireAdmin,
+  validateSlug,
+  isImageUrlTrusted,
+  handleServerError,
+  checkRateLimit,
+  createAuditLog,
+} from "@/lib/security";
 
 const productIdSchema = z.string().uuid();
 
 /**
- * Generate a slug from a product name
+ * Generate a slug from a product name with validation
  */
 function generateSlug(name: string): string {
-  return name
+  const slug = name
     .toLowerCase()
     .replace(/[^\w\s-]/g, "")
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
     .trim();
+
+  const validation = validateSlug(slug);
+  if (!validation.valid) {
+    throw new Error(validation.error || "Invalid slug generated");
+  }
+
+  return slug;
 }
 
 /**
- * Create a new product
+ * Validate product image URL
+ */
+function validateProductImage(imageUrl: string | undefined | null): void {
+  if (!imageUrl) return;
+
+  if (!isImageUrlTrusted(imageUrl)) {
+    throw new Error("Image URL must be from a trusted domain (Supabase, etc.)");
+  }
+
+  if (imageUrl.length > 2048) {
+    throw new Error("Image URL is too long");
+  }
+}
+
+/**
+ * Create a new product (PROTECTED - Admin only)
  */
 export async function createProduct(data: ProductFormData) {
   try {
+    // ✅ Authentication check
+    const adminEmail = await requireAdmin();
+
+    // ✅ Rate limiting
+    if (!checkRateLimit(`${adminEmail}:create_product`, 20, 3600000)) {
+      throw new Error("Too many product creations. Please try again later.");
+    }
+
+    // ✅ Input validation
     const validatedData = productFormSchema.parse(data);
+    // Validate each image in the array
+    validatedData.images.forEach((imageUrl) => validateProductImage(imageUrl));
+
     const client = createAdminClient();
 
     // Generate slug from name
@@ -38,30 +80,50 @@ export async function createProduct(data: ProductFormData) {
 
     if (error) throw error;
 
+    // ✅ Audit logging
+    await createAuditLog("CREATE", "product", product.id, {
+      name: product.name,
+      category_id: product.category_id,
+    });
+
     revalidatePath("/", "layout");
     return { success: true, product };
   } catch (error) {
-    console.error("Create product error:", error);
+    const { message, isValidationError } = handleServerError(error);
     return {
       success: false,
-      error:
-        error instanceof z.ZodError
-          ? error.issues[0].message
-          : "Failed to create product",
+      error: message,
+      isValidationError,
     };
   }
 }
 
 /**
- * Update a product
+ * Update a product (PROTECTED - Admin only)
  */
 export async function updateProduct(
   id: string,
   data: Partial<ProductFormData>
 ) {
   try {
+    // ✅ Authentication check
+    const adminEmail = await requireAdmin();
+
+    // ✅ Rate limiting
+    if (!checkRateLimit(`${adminEmail}:update_product`, 30, 3600000)) {
+      throw new Error("Too many product updates. Please try again later.");
+    }
+
+    // ✅ Input validation
     productIdSchema.parse(id);
     const validatedData = productFormSchema.partial().parse(data);
+    // Validate each image in the array if provided
+    if (validatedData.images) {
+      validatedData.images.forEach((imageUrl) =>
+        validateProductImage(imageUrl)
+      );
+    }
+
     const client = createAdminClient();
 
     // If name is provided, regenerate slug
@@ -79,39 +141,53 @@ export async function updateProduct(
 
     if (error) throw error;
 
+    // ✅ Audit logging
+    await createAuditLog("UPDATE", "product", id, validatedData);
+
     revalidatePath("/", "layout");
     return { success: true, product };
   } catch (error) {
-    console.error("Update product error:", error);
+    const { message, isValidationError } = handleServerError(error);
     return {
       success: false,
-      error:
-        error instanceof z.ZodError
-          ? error.issues[0].message
-          : "Failed to update product",
+      error: message,
+      isValidationError,
     };
   }
 }
 
 /**
- * Delete a product
+ * Delete a product (PROTECTED - Admin only)
  */
 export async function deleteProduct(id: string) {
   try {
+    // ✅ Authentication check
+    const adminEmail = await requireAdmin();
+
+    // ✅ Rate limiting
+    if (!checkRateLimit(`${adminEmail}:delete_product`, 20, 3600000)) {
+      throw new Error("Too many product deletions. Please try again later.");
+    }
+
+    // ✅ Input validation
     productIdSchema.parse(id);
+
     const client = createAdminClient();
 
     const { error } = await client.from("products").delete().eq("id", id);
 
     if (error) throw error;
 
+    // ✅ Audit logging
+    await createAuditLog("DELETE", "product", id);
+
     revalidatePath("/", "layout");
     return { success: true };
   } catch (error) {
-    console.error("Delete product error:", error);
+    const { message } = handleServerError(error);
     return {
       success: false,
-      error: "Failed to delete product",
+      error: message,
     };
   }
 }

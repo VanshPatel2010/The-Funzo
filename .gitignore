@@ -34,3 +34,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# markdown files (except README.md)
+*.md
+!README.md
+
+# supabase documentation (keep only SQL files and migrations)
+/supabase/**/*.md
+/supabase/ADMIN_AUTH_SETUP.md

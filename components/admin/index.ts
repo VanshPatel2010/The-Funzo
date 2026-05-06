@@ -8,3 +8,4 @@ export { ProductsTable } from "./ProductsTable";
 export { ProductForm } from "./ProductForm";
 export { ProductTableRow } from "./ProductTableRow";
 export { DeleteConfirmDialog } from "./DeleteConfirmDialog";
+export { ChangePasswordForm } from "./ChangePasswordForm";

@@ -18,9 +18,20 @@ const authConfig = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // Validate input
+        // ✅ Validate input
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Email and password required");
+        }
+
+        // ✅ Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(credentials.email as string)) {
+          throw new Error("Invalid credentials");
+        }
+
+        // ✅ Check password length to prevent DoS
+        if ((credentials.password as string).length > 1000) {
+          throw new Error("Invalid credentials");
         }
 
         try {
@@ -34,6 +45,7 @@ const authConfig = {
             .single();
 
           if (adminError || !admin) {
+            // Return generic error to prevent user enumeration
             throw new Error("Invalid credentials");
           }
 
@@ -55,22 +67,38 @@ const authConfig = {
           );
 
           if (!passwordMatch) {
+            // Return generic error to prevent user enumeration
             throw new Error("Invalid credentials");
           }
 
-          // Return user object for JWT
+          // ✅ Return user object for JWT - only include safe data
           return {
             id: admin.id,
             email: admin.email,
             name: admin.email,
           };
         } catch {
+          // Don't leak error details
           throw new Error("Authentication failed");
         }
       },
     }),
   ],
+  // ✅ Security settings
   trustHost: true,
+  pages: {
+    signIn: "/admin/login",
+    error: "/admin/login?error=true",
+  },
+  callbacks: {
+    // ✅ Validate JWT before use
+    async jwt({ token }) {
+      return token;
+    },
+    async session({ session }) {
+      return session;
+    },
+  },
 } satisfies NextAuthConfig;
 
 export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);

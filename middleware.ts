@@ -1,7 +1,8 @@
 import { auth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
+import { withSecurityHeaders } from "@/lib/security-headers";
 
-// ─── Middleware for protecting /admin routes ────────────────────────────────
+// ─── Middleware for protecting /admin routes and adding security headers ────
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -16,10 +17,12 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  // Apply security headers to all responses
+  const response = NextResponse.next();
+  return withSecurityHeaders(response);
 }
 
 // Configure which routes the middleware runs on
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/:path*"],
 };
