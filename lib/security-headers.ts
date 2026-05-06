@@ -26,9 +26,9 @@ export const securityHeaders = {
     "default-src 'self'; " +
     "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.app; " +
     "style-src 'self' 'unsafe-inline'; " +
-    "img-src 'self' data: *.supabase.co *.vercel.app; " +
+    "img-src 'self' data: https: *.supabase.co *.vercel.app unsplash.com *.unsplash.com images.unsplash.com; " +
     "font-src 'self' data:; " +
-    "connect-src 'self' *.supabase.co *.vercel.app; " +
+    "connect-src 'self' *.supabase.co *.vercel.app unsplash.com *.unsplash.com; " +
     "frame-ancestors 'self'; " +
     "base-uri 'self'; " +
     "form-action 'self'",
