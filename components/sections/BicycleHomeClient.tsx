@@ -106,7 +106,7 @@ export function BicycleHomeClient({
       <section className="relative isolate overflow-hidden pb-24 pt-10">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#06111a_0%,#081724_50%,#0a1f30_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,208,223,0.14),transparent_26%),radial-gradient(circle_at_80%_18%,rgba(74,222,128,0.10),transparent_22%),radial-gradient(circle_at_80%_70%,rgba(255,255,255,0.08),transparent_20%)]" />
-        <div className="absolute left-1/2 top-0 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-cyan-400/8 blur-[120px]" />
+        <div className="hidden md:block absolute left-1/2 top-0 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-cyan-400/8 blur-[120px]" />
 
         <div className="relative z-10 mx-auto grid max-w-7xl gap-14 px-6 pt-10 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-10">
           <motion.div
@@ -178,8 +178,8 @@ export function BicycleHomeClient({
             <div className="absolute inset-10 rounded-[3rem] bg-cyan-400/8 blur-[90px]" />
             <div className="relative overflow-hidden rounded-[2.4rem] border border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04))] p-4 shadow-[0_40px_120px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
               <div className="relative overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(9,19,29,0.96),rgba(7,15,23,1))]">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_24%)]" />
-                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(37,208,223,0.08),transparent_35%,rgba(255,255,255,0.04)_60%,transparent_80%)]" />
+                <div className="hidden md:block absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_24%)]" />
+                <div className="hidden md:block absolute inset-0 bg-[linear-gradient(135deg,rgba(37,208,223,0.08),transparent_35%,rgba(255,255,255,0.04)_60%,transparent_80%)]" />
                 <div className="absolute right-6 top-6 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.28em] text-cyan-100 backdrop-blur-xl">
                   Featured Product
                 </div>
@@ -192,8 +192,8 @@ export function BicycleHomeClient({
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-cover object-center"
                   />
-                  <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(6,17,26,0.18),transparent_45%,rgba(6,17,26,0.22))]" />
-                  <div className="absolute inset-x-0 bottom-0 h-32 bg-[linear-gradient(180deg,transparent,rgba(6,17,26,0.54))]" />
+                  <div className="hidden md:block absolute inset-0 bg-[linear-gradient(90deg,rgba(6,17,26,0.18),transparent_45%,rgba(6,17,26,0.22))]" />
+                  <div className="hidden md:block absolute inset-x-0 bottom-0 h-32 bg-[linear-gradient(180deg,transparent,rgba(6,17,26,0.54))]" />
                   <div className="absolute left-8 top-8 flex gap-2">
                     <span className="h-2.5 w-2.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(37,208,223,0.7)]" />
                     <span className="h-2.5 w-2.5 rounded-full bg-white/70" />
@@ -247,19 +247,16 @@ export function BicycleHomeClient({
         </div>
       </section>
 
-      <section
-        id="featured"
-        className="bg-[linear-gradient(180deg,#08131d_0%,#0b1824_100%)] py-24"
-      >
+      <section id="featured" className="bg-[#eef7fb] py-24 text-slate-950">
         <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <SectionLabel>Featured Products</SectionLabel>
-              <h2 className="font-display mt-6 max-w-3xl text-4xl font-semibold uppercase tracking-[-0.05em] text-white sm:text-5xl">
+              <SectionLabel light>Featured Products</SectionLabel>
+              <h2 className="font-display mt-6 max-w-3xl text-4xl font-semibold uppercase tracking-[-0.05em] text-slate-950 sm:text-5xl">
                 Our Top Selling Bicycles
               </h2>
             </div>
-            <p className="max-w-xl text-sm leading-7 text-slate-300 sm:text-base">
+            <p className="max-w-xl text-base leading-7 text-slate-600">
               Explore our hand-picked selection of premium bicycles designed for
               performance, comfort, and ultimate fun.
             </p>
@@ -278,7 +275,7 @@ export function BicycleHomeClient({
                   viewport={{ once: true, amount: 0.25 }}
                   transition={{ duration: 0.5, delay: index * 0.08 }}
                   whileHover={{ y: -10 }}
-                  className="group overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] shadow-[0_28px_80px_rgba(0,0,0,0.24)]"
+                  className="group overflow-hidden rounded-[2rem] border border-sky-100 bg-white shadow-[0_18px_55px_rgba(15,23,42,0.08)]"
                 >
                   <div className="relative aspect-[0.95] overflow-hidden">
                     <Image
@@ -292,24 +289,24 @@ export function BicycleHomeClient({
                           "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&fit=crop";
                       }}
                     />
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(6,17,26,0.02),rgba(6,17,26,0.8))]" />
-                    <div className="absolute left-5 top-5 rounded-full border border-cyan-300/18 bg-cyan-300/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.26em] text-cyan-100 backdrop-blur-xl">
+                    <div className="absolute inset-0 bg-white/6" />
+                    <div className="absolute left-5 top-5 rounded-full border border-white/50 bg-white/55 px-3 py-1 text-[0.68rem] uppercase tracking-[0.26em] text-slate-700 backdrop-blur-xl">
                       {product.category}
                     </div>
                   </div>
 
                   <div className="p-6">
-                    <div className="rounded-[1.45rem] border border-white/8 bg-black/22 p-5 backdrop-blur-xl">
+                    <div className="rounded-[1.45rem] border border-sky-100 bg-white p-5 backdrop-blur-sm">
                       <div className="flex items-end justify-between gap-4">
                         <div>
-                          <h3 className="font-display text-3xl uppercase tracking-[-0.05em] text-white">
+                          <h3 className="font-display text-3xl uppercase tracking-[-0.05em] text-slate-950">
                             {product.name}
                           </h3>
-                          <p className="mt-2 text-sm leading-6 text-slate-300">
+                          <p className="mt-2 text-sm leading-6 text-slate-600">
                             {product.note}
                           </p>
                         </div>
-                        <span className="text-xl text-cyan-200 transition duration-300 group-hover:translate-x-1">
+                        <span className="text-xl text-slate-700 transition duration-300 group-hover:translate-x-1">
                           ↗
                         </span>
                       </div>

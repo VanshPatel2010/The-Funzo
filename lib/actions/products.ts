@@ -7,7 +7,7 @@ import { productFormSchema, ProductFormData, Product } from "@/lib/types";
 import {
   requireAdmin,
   validateSlug,
-  isImageUrlTrusted,
+  validateImageUrl,
   handleServerError,
   checkRateLimit,
   createAuditLog,
@@ -38,14 +38,12 @@ function generateSlug(name: string): string {
  * Validate product image URL
  */
 function validateProductImage(imageUrl: string | undefined | null): void {
-  if (!imageUrl) return;
+  const validation = validateImageUrl(imageUrl, {
+    allowAnyDomain: true,
+  });
 
-  if (!isImageUrlTrusted(imageUrl)) {
-    throw new Error("Image URL must be from a trusted domain (Supabase, etc.)");
-  }
-
-  if (imageUrl.length > 2048) {
-    throw new Error("Image URL is too long");
+  if (!validation.valid) {
+    throw new Error(validation.error || "Invalid image URL");
   }
 }
 

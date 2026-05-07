@@ -7,6 +7,7 @@ import { categoryFormSchema, CategoryFormData } from "@/lib/types";
 import {
   requireAdmin,
   validateSlug,
+  validateImageUrl,
   handleServerError,
   checkRateLimit,
   createAuditLog,
@@ -36,6 +37,13 @@ export async function createCategory(data: CategoryFormData) {
       if (!slugValidation.valid) {
         throw new Error(slugValidation.error || "Invalid category slug");
       }
+    }
+
+    const imageValidation = validateImageUrl(validatedData.image_url, {
+      allowAnyDomain: true,
+    });
+    if (!imageValidation.valid) {
+      throw new Error(imageValidation.error || "Invalid image URL");
     }
 
     const client = createAdminClient();
@@ -91,6 +99,15 @@ export async function updateCategory(
       const slugValidation = validateSlug(validatedData.slug);
       if (!slugValidation.valid) {
         throw new Error(slugValidation.error || "Invalid category slug");
+      }
+    }
+
+    if (validatedData.image_url !== undefined) {
+      const imageValidation = validateImageUrl(validatedData.image_url, {
+        allowAnyDomain: true,
+      });
+      if (!imageValidation.valid) {
+        throw new Error(imageValidation.error || "Invalid image URL");
       }
     }
 

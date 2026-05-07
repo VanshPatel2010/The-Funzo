@@ -1,6 +1,6 @@
-import { auth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { withSecurityHeaders } from "@/lib/security-headers";
+import { getToken } from "next-auth/jwt";
 
 // ─── Middleware for protecting /admin routes and adding security headers ────
 
@@ -9,9 +9,12 @@ export async function middleware(request: NextRequest) {
 
   // Protect /admin routes except /admin/login
   if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
-    const session = await auth();
+    const token = await getToken({
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET,
+    });
 
-    if (!session) {
+    if (!token) {
       const loginUrl = new URL("/admin/login", request.url);
       return NextResponse.redirect(loginUrl);
     }

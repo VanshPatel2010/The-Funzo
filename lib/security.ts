@@ -82,6 +82,44 @@ export function isImageUrlTrusted(url: string | undefined | null): boolean {
 }
 
 /**
+ * Validate image URL safety and optionally enforce trusted-domain policy
+ */
+export function validateImageUrl(
+  url: string | undefined | null,
+  options?: { allowAnyDomain?: boolean }
+): { valid: boolean; error?: string } {
+  if (!url) return { valid: true };
+
+  if (url.length > 2048) {
+    return { valid: false, error: "Image URL is too long" };
+  }
+
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return { valid: false, error: "Invalid image URL" };
+  }
+
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+    return { valid: false, error: "Image URL must use http or https" };
+  }
+
+  if (options?.allowAnyDomain) {
+    return { valid: true };
+  }
+
+  if (!isImageUrlTrusted(url)) {
+    return {
+      valid: false,
+      error: "Image URL must be from a trusted domain (Supabase, etc.)",
+    };
+  }
+
+  return { valid: true };
+}
+
+/**
  * Validate slug format and check against reserved words
  * @param slug - Slug to validate
  * @returns { valid: boolean, error?: string }
