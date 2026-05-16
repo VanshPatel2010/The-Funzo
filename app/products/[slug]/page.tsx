@@ -203,7 +203,7 @@ async function ProductContent({ slug }: { slug: string }) {
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#25D366] text-white rounded-lg font-semibold hover:bg-[#20bd5a] transition-colors shadow-sm hover:shadow-md"
+                  className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#128c3a] text-white rounded-lg font-semibold hover:bg-[#0f7a33] transition-colors shadow-sm hover:shadow-md"
                 >
                   <svg
                     className="w-5 h-5"

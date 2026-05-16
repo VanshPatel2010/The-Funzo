@@ -50,7 +50,7 @@ export default async function ContactPage() {
                 href={buildWhatsAppLink(settings.whatsapp_number)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#20bd5a]"
+                className="inline-flex items-center justify-center rounded-full bg-[#128c3a] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#0f7a33]"
               >
                 Chat on WhatsApp
               </a>

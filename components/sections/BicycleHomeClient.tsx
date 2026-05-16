@@ -1,15 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import {
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
 import type { StoreSettings } from "@/lib/types";
 import { buildWhatsAppLink } from "@/lib/store-settings";
 import { storeSeo } from "@/lib/seo";
@@ -82,44 +72,15 @@ export function BicycleHomeClient({
   featuredProducts,
   settings,
 }: BicycleHomeClientProps) {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const smoothX = useSpring(mouseX, { stiffness: 120, damping: 20 });
-  const smoothY = useSpring(mouseY, { stiffness: 120, damping: 20 });
-  const cursorGlow = useMotionTemplate`radial-gradient(360px circle at ${smoothX}px ${smoothY}px, rgba(37, 208, 223, 0.14), transparent 42%)`;
-
-  const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 500], [0, -36]);
-  const tagY = useTransform(scrollY, [0, 400], [0, -18]);
-
   return (
-    <div
-      className="overflow-hidden bg-[#06111a] text-white"
-      onMouseMove={(event) => {
-        const bounds = event.currentTarget.getBoundingClientRect();
-        mouseX.set(event.clientX - bounds.left);
-        mouseY.set(event.clientY - bounds.top);
-      }}
-    >
-      <div className="pointer-events-none fixed inset-0 z-[1] hidden md:block">
-        <motion.div
-          className="absolute inset-0"
-          style={{ background: cursorGlow }}
-        />
-      </div>
-
+    <div className="overflow-hidden bg-[#06111a] text-white">
       <section className="relative isolate overflow-hidden pb-24 pt-10">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#06111a_0%,#081724_50%,#0a1f30_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,208,223,0.14),transparent_26%),radial-gradient(circle_at_80%_18%,rgba(74,222,128,0.10),transparent_22%),radial-gradient(circle_at_80%_70%,rgba(255,255,255,0.08),transparent_20%)]" />
         <div className="hidden md:block absolute left-1/2 top-0 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-cyan-400/8 blur-[120px]" />
 
         <div className="relative z-10 mx-auto grid max-w-7xl gap-14 px-6 pt-10 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-10">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75 }}
-            className="max-w-2xl"
-          >
+          <div className="max-w-2xl">
             <SectionLabel>Premium Family Cycling</SectionLabel>
             <h1 className="font-display mt-8 text-[3.4rem] font-semibold uppercase leading-[0.9] tracking-[-0.06em] text-white sm:text-[4.9rem] lg:text-[6rem]">
               Best Cycle & Toy Store in Gandhinagar.
@@ -156,30 +117,21 @@ export function BicycleHomeClient({
                   label: "Products live",
                 },
                 { value: "Family", label: "Friendly designs" },
-              ].map((item, index) => (
-                <motion.div
+              ].map((item) => (
+                <div
                   key={item.label}
-                  initial={{ opacity: 0, y: 18 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + index * 0.1 }}
                   className="rounded-[1.55rem] border border-white/8 bg-white/[0.045] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.25)] backdrop-blur-xl"
                 >
                   <p className="font-display text-3xl uppercase tracking-[-0.05em] text-white">
                     {item.value}
                   </p>
                   <p className="mt-2 text-sm text-slate-300">{item.label}</p>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.85, delay: 0.08 }}
-            className="relative mx-auto w-full max-w-4xl"
-            style={{ y: heroY }}
-          >
+          <div className="relative mx-auto w-full max-w-4xl">
             <div className="absolute inset-10 rounded-[3rem] bg-cyan-400/8 blur-[90px]" />
             <div className="relative overflow-hidden rounded-[2.4rem] border border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04))] p-4 shadow-[0_40px_120px_rgba(0,0,0,0.42)] backdrop-blur-2xl">
               <div className="relative overflow-hidden rounded-[2rem] border border-white/8 bg-[linear-gradient(180deg,rgba(9,19,29,0.96),rgba(7,15,23,1))]">
@@ -209,11 +161,7 @@ export function BicycleHomeClient({
               </div>
             </div>
 
-            <motion.div
-              whileHover={{ y: -6, rotate: -1.5 }}
-              className="absolute -bottom-4 left-2 rounded-[1.45rem] border border-cyan-300/18 bg-[#0b1824]/78 p-4 shadow-[0_18px_50px_rgba(0,0,0,0.32)] backdrop-blur-2xl sm:left-10 sm:w-56"
-              style={{ y: tagY }}
-            >
+            <div className="absolute -bottom-4 left-2 rounded-[1.45rem] border border-cyan-300/18 bg-[#0b1824]/78 p-4 shadow-[0_18px_50px_rgba(0,0,0,0.32)] backdrop-blur-2xl sm:left-10 sm:w-56">
               <p className="text-xs uppercase tracking-[0.24em] text-cyan-200">
                 Premium Quality
               </p>
@@ -223,33 +171,26 @@ export function BicycleHomeClient({
               <p className="mt-2 text-sm leading-6 text-slate-300">
                 Built to last with high-end components.
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              whileHover={{ y: -6, rotate: 1.5 }}
-              className="absolute -right-1 top-12 rounded-[1.45rem] border border-white/14 bg-white/10 p-4 shadow-[0_18px_50px_rgba(0,0,0,0.28)] backdrop-blur-2xl sm:right-6 sm:w-48"
-              style={{ y: tagY }}
-            >
+            <div className="absolute -right-1 top-12 rounded-[1.45rem] border border-white/14 bg-white/10 p-4 shadow-[0_18px_50px_rgba(0,0,0,0.28)] backdrop-blur-2xl sm:right-6 sm:w-48">
               <p className="text-xs uppercase tracking-[0.24em] text-white/80">
                 For All Ages
               </p>
               <p className="mt-3 text-sm leading-6 text-slate-100">
                 Perfect rides for every member of the family.
               </p>
-            </motion.div>
+            </div>
 
-            <motion.div
-              whileHover={{ y: -5 }}
-              className="absolute bottom-8 right-10 hidden rounded-[1.35rem] border border-white/14 bg-white/8 px-5 py-4 shadow-[0_18px_50px_rgba(0,0,0,0.25)] backdrop-blur-xl md:block"
-            >
+            <div className="absolute bottom-8 right-10 hidden rounded-[1.35rem] border border-white/14 bg-white/8 px-5 py-4 shadow-[0_18px_50px_rgba(0,0,0,0.25)] backdrop-blur-xl md:block">
               <p className="text-[0.68rem] uppercase tracking-[0.28em] text-slate-300">
                 Expert Pick
               </p>
               <p className="mt-2 font-display text-2xl uppercase tracking-[-0.04em] text-white">
                 Bestseller
               </p>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -272,32 +213,22 @@ export function BicycleHomeClient({
           </div>
 
           <div className="mt-14 grid gap-6 lg:grid-cols-3">
-            {featuredProducts.map((product, index) => (
+            {featuredProducts.map((product) => (
               <Link
                 key={product.id}
                 href={`/product/${product.slug}`}
                 className="block"
               >
-                <motion.article
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.25 }}
-                  transition={{ duration: 0.5, delay: index * 0.08 }}
-                  whileHover={{ y: -10 }}
-                  className="group overflow-hidden rounded-[2rem] border border-sky-100 bg-white shadow-[0_18px_55px_rgba(15,23,42,0.08)]"
-                >
+                <article className="group overflow-hidden rounded-[2rem] border border-sky-100 bg-white shadow-[0_18px_55px_rgba(15,23,42,0.08)] transition-transform duration-300 hover:-translate-y-2">
                   <div className="relative aspect-[0.95] overflow-hidden">
                     <Image
                       src={product.image}
                       alt={`${product.name} available at cycle store in Gandhinagar`}
                       fill
                       loading="lazy"
-                      sizes="(max-width: 1024px) 100vw, 33vw"
+                      quality={58}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 390px"
                       className="object-cover transition duration-700 group-hover:scale-[1.05]"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&fit=crop";
-                      }}
                     />
                     <div className="absolute inset-0 bg-white/6" />
                     <div className="absolute left-5 top-5 rounded-full border border-white/50 bg-white/55 px-3 py-1 text-[0.68rem] uppercase tracking-[0.26em] text-slate-700 backdrop-blur-xl">
@@ -322,7 +253,7 @@ export function BicycleHomeClient({
                       </div>
                     </div>
                   </div>
-                </motion.article>
+                </article>
               </Link>
             ))}
           </div>
@@ -349,32 +280,22 @@ export function BicycleHomeClient({
           </div>
 
           <div className="mt-14 grid gap-6 lg:grid-cols-3">
-            {categories.map((category, index) => (
+            {categories.map((category) => (
               <Link
                 key={category.id}
                 href={`/category/${category.slug}`}
                 className="block"
               >
-                <motion.article
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.25 }}
-                  transition={{ duration: 0.5, delay: index * 0.08 }}
-                  whileHover={{ y: -8 }}
-                  className="overflow-hidden rounded-[2rem] border border-sky-100 bg-white shadow-[0_18px_55px_rgba(15,23,42,0.08)]"
-                >
+                <article className="overflow-hidden rounded-[2rem] border border-sky-100 bg-white shadow-[0_18px_55px_rgba(15,23,42,0.08)] transition-transform duration-300 hover:-translate-y-2">
                   <div className="relative aspect-[1.05] overflow-hidden">
                     <Image
                       src={category.image}
                       alt={`${category.title} at toy and cycle store in Raysan Gandhinagar`}
                       fill
                       loading="lazy"
-                      sizes="(max-width: 1024px) 100vw, 33vw"
+                      quality={58}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 390px"
                       className="object-cover transition duration-700 hover:scale-[1.04]"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&fit=crop";
-                      }}
                     />
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(7,15,23,0.48))]" />
                     <div className="absolute left-5 top-5 rounded-full border border-white/50 bg-white/55 px-3 py-1 text-[0.68rem] uppercase tracking-[0.26em] text-slate-700 backdrop-blur-xl">
@@ -389,7 +310,7 @@ export function BicycleHomeClient({
                       {category.description}
                     </p>
                   </div>
-                </motion.article>
+                </article>
               </Link>
             ))}
           </div>
@@ -417,7 +338,7 @@ export function BicycleHomeClient({
                 href={buildWhatsAppLink(settings.whatsapp_number)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#20bd5a]"
+                className="inline-flex items-center justify-center rounded-full bg-[#128c3a] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#0f7a33]"
               >
                 Chat on WhatsApp
               </a>
@@ -465,15 +386,10 @@ export function BicycleHomeClient({
           </div>
 
           <div className="mt-14 grid gap-6 lg:grid-cols-3">
-            {reviews.map((review, index) => (
-              <motion.blockquote
+            {reviews.map((review) => (
+              <blockquote
                 key={review.author}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.5, delay: index * 0.08 }}
-                whileHover={{ y: -8 }}
-                className="rounded-[2rem] border border-white/70 bg-white/72 p-6 shadow-[0_18px_55px_rgba(17,17,17,0.08)] backdrop-blur-2xl"
+                className="rounded-[2rem] border border-white/70 bg-white/72 p-6 shadow-[0_18px_55px_rgba(17,17,17,0.08)] backdrop-blur-2xl transition-transform duration-300 hover:-translate-y-2"
               >
                 <p className="text-lg leading-8 text-slate-700">
                   &ldquo;{review.quote}&rdquo;
@@ -484,7 +400,7 @@ export function BicycleHomeClient({
                   </p>
                   <p className="mt-1 text-sm text-slate-500">{review.role}</p>
                 </footer>
-              </motion.blockquote>
+              </blockquote>
             ))}
           </div>
         </div>

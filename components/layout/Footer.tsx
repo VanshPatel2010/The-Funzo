@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { motion } from "framer-motion";
 import type { StoreSettings } from "@/lib/types";
 import { buildWhatsAppLink } from "@/lib/store-settings";
 import { storeSeo } from "@/lib/seo";
@@ -63,37 +60,15 @@ function PhoneIcon() {
   );
 }
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
-
 export default function Footer({ settings }: { settings: StoreSettings }) {
   return (
     <footer
       id="contact"
       className="scroll-mt-24 border-t border-white/6 bg-[#071018] text-slate-300"
     >
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-10"
-      >
+      <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-10">
         <div className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 sm:py-16 lg:grid-cols-4 lg:gap-12">
-          <motion.div
-            variants={itemVariants}
-            className="sm:col-span-2 lg:col-span-1"
-          >
+          <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block">
               <span className="font-display text-3xl font-semibold uppercase tracking-[0.16em] text-white transition-colors duration-200 hover:text-sky-100">
                 The Funzo
@@ -106,12 +81,12 @@ export default function Footer({ settings }: { settings: StoreSettings }) {
             <p className="mt-3 text-xs font-semibold uppercase tracking-[0.28em] text-[#76bce7]">
               Ride. Grow. Explore.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div variants={itemVariants}>
-            <h4 className="mb-5 text-sm font-semibold uppercase tracking-[0.22em] text-white">
+          <div>
+            <p className="mb-5 text-sm font-semibold uppercase tracking-[0.22em] text-white">
               Navigate
-            </h4>
+            </p>
             <ul className="space-y-3">
               {footerLinks.map((link) => (
                 <li key={link.href}>
@@ -125,12 +100,12 @@ export default function Footer({ settings }: { settings: StoreSettings }) {
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </div>
 
-          <motion.div variants={itemVariants}>
-            <h4 className="mb-5 text-sm font-semibold uppercase tracking-[0.22em] text-white">
+          <div>
+            <p className="mb-5 text-sm font-semibold uppercase tracking-[0.22em] text-white">
               Signature Lines
-            </h4>
+            </p>
             <ul className="space-y-3">
               {["Starter Bikes", "Adventure Bikes", "Junior Gear Bikes"].map(
                 (cat) => (
@@ -146,12 +121,12 @@ export default function Footer({ settings }: { settings: StoreSettings }) {
                 )
               )}
             </ul>
-          </motion.div>
+          </div>
 
-          <motion.div variants={itemVariants}>
-            <h4 className="mb-5 text-sm font-semibold uppercase tracking-[0.22em] text-white">
+          <div>
+            <p className="mb-5 text-sm font-semibold uppercase tracking-[0.22em] text-white">
               Contact
-            </h4>
+            </p>
             <ul className="space-y-4">
               <li>
                 <a
@@ -205,20 +180,17 @@ export default function Footer({ settings }: { settings: StoreSettings }) {
                   rel="noopener noreferrer"
                   className="group flex items-center gap-3 text-sm text-slate-300 transition-colors duration-200 hover:text-white"
                 >
-                  <span className="text-[#25D366]">
+                  <span className="text-[#128c3a]">
                     <PhoneIcon />
                   </span>
                   <span>WhatsApp The Funzo</span>
                 </a>
               </li>
             </ul>
-          </motion.div>
+          </div>
         </div>
 
-        <motion.div
-          variants={itemVariants}
-          className="flex flex-col items-center justify-between gap-3 border-t border-white/[0.06] py-6 sm:flex-row"
-        >
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-white/[0.06] py-6 sm:flex-row">
           <p className="text-xs text-slate-400">
             &copy; {new Date().getFullYear()} The Funzo. All rights reserved.
           </p>
@@ -242,8 +214,8 @@ export default function Footer({ settings }: { settings: StoreSettings }) {
               <MapPinIcon />
             </a>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </footer>
   );
 }

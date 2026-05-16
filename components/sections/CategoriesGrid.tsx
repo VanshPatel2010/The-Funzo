@@ -52,7 +52,8 @@ function CategoryCard({ category }: { category: Category }) {
             alt={`${category.name} collection at cycle and toy store in Gandhinagar`}
             loading="lazy"
             fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 400px"
+            quality={58}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 390px"
             className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
             onError={(e) => {
               (e.target as HTMLImageElement).src =

@@ -23,6 +23,8 @@ const nextConfig = {
         hostname: "**",
       },
     ],
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 86400,
   },
   experimental: {
     optimizePackageImports: ["framer-motion"],

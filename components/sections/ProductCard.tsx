@@ -55,7 +55,8 @@ function ImageCarousel({
             alt={`${name} at cycle and toy store in Gandhinagar - image ${current + 1}`}
             loading="lazy"
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            quality={58}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 390px"
             className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
             onError={() =>
               setFailedImages((prev) => new Set(prev).add(current))
@@ -227,7 +228,8 @@ export function ProductCard({ product, showLink = true }: ProductCardProps) {
               alt={`${product.name} for sale in Gandhinagar`}
               loading="lazy"
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              quality={58}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 390px"
               className="object-cover"
               onError={(e) => {
                 (e.target as HTMLImageElement).src =
@@ -299,7 +301,7 @@ export function ProductCard({ product, showLink = true }: ProductCardProps) {
             onClick={(e) => e.stopPropagation()}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md shrink-0"
+            className="inline-flex items-center gap-2 bg-[#128c3a] hover:bg-[#0f7a33] text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md shrink-0"
           >
             <WhatsAppIcon />
             <span className="hidden sm:inline">Enquire</span>

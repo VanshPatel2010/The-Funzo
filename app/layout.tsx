@@ -61,19 +61,6 @@ export default async function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin=""
-        />
-        <link rel="preconnect" href="https://images.unsplash.com" />
-        <link
-          rel="preload"
-          as="image"
-          href="/hero-bike.jpg"
-          fetchPriority="high"
-        />
       </head>
       <body className="bg-[#071018] font-sans text-white antialiased">
         <Header settings={settings} />
