@@ -10,6 +10,9 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
+import type { StoreSettings } from "@/lib/types";
+import { buildWhatsAppLink } from "@/lib/store-settings";
+import { storeSeo } from "@/lib/seo";
 import heroImage from "../../images/519PXRrtVML._SX679_.jpg";
 
 interface BicycleHomeClientProps {
@@ -29,6 +32,7 @@ interface BicycleHomeClientProps {
     note: string;
     image: string;
   }>;
+  settings: StoreSettings;
 }
 
 const reviews = [
@@ -76,6 +80,7 @@ function SectionLabel({
 export function BicycleHomeClient({
   categories,
   featuredProducts,
+  settings,
 }: BicycleHomeClientProps) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -117,12 +122,12 @@ export function BicycleHomeClient({
           >
             <SectionLabel>Premium Family Cycling</SectionLabel>
             <h1 className="font-display mt-8 text-[3.4rem] font-semibold uppercase leading-[0.9] tracking-[-0.06em] text-white sm:text-[4.9rem] lg:text-[6rem]">
-              Cycle And Toy Store In Raysan, Gandhinagar.
+              Best Cycle & Toy Store in Gandhinagar.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
               The Funzo brings kids cycles, family bicycles, and fun toys
-              together in one store for Raysan and Gandhinagar families looking
-              for quality, variety, and helpful service.
+              together in Raysan, Gandhinagar for families looking for a cycle
+              shop and toy store near them.
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -186,9 +191,10 @@ export function BicycleHomeClient({
                 <div className="relative aspect-[1.15]">
                   <Image
                     src={heroImage}
-                    alt="Premium bicycle product visual"
+                    alt="kids bicycle and cycle store in Gandhinagar"
                     fill
                     priority
+                    fetchPriority="high"
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-cover object-center"
                   />
@@ -247,7 +253,10 @@ export function BicycleHomeClient({
         </div>
       </section>
 
-      <section id="featured" className="bg-[#eef7fb] py-24 text-slate-950">
+      <section
+        id="featured"
+        className="scroll-mt-24 bg-[#eef7fb] py-24 text-slate-950"
+      >
         <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
@@ -266,7 +275,7 @@ export function BicycleHomeClient({
             {featuredProducts.map((product, index) => (
               <Link
                 key={product.id}
-                href={`/products/${product.slug}`}
+                href={`/product/${product.slug}`}
                 className="block"
               >
                 <motion.article
@@ -280,8 +289,9 @@ export function BicycleHomeClient({
                   <div className="relative aspect-[0.95] overflow-hidden">
                     <Image
                       src={product.image}
-                      alt={product.name}
+                      alt={`${product.name} available at cycle store in Gandhinagar`}
                       fill
+                      loading="lazy"
                       sizes="(max-width: 1024px) 100vw, 33vw"
                       className="object-cover transition duration-700 group-hover:scale-[1.05]"
                       onError={(e) => {
@@ -319,7 +329,10 @@ export function BicycleHomeClient({
         </div>
       </section>
 
-      <section id="categories" className="bg-[#eef7fb] py-24 text-slate-950">
+      <section
+        id="categories"
+        className="scroll-mt-24 bg-[#eef7fb] py-24 text-slate-950"
+      >
         <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
@@ -339,7 +352,7 @@ export function BicycleHomeClient({
             {categories.map((category, index) => (
               <Link
                 key={category.id}
-                href={`/categories/${category.slug}`}
+                href={`/category/${category.slug}`}
                 className="block"
               >
                 <motion.article
@@ -353,8 +366,9 @@ export function BicycleHomeClient({
                   <div className="relative aspect-[1.05] overflow-hidden">
                     <Image
                       src={category.image}
-                      alt={category.title}
+                      alt={`${category.title} at toy and cycle store in Raysan Gandhinagar`}
                       fill
+                      loading="lazy"
                       sizes="(max-width: 1024px) 100vw, 33vw"
                       className="object-cover transition duration-700 hover:scale-[1.04]"
                       onError={(e) => {
@@ -382,7 +396,60 @@ export function BicycleHomeClient({
         </div>
       </section>
 
-      <section id="reviews" className="bg-[#f5fbff] py-24 text-slate-950">
+      <section
+        id="store"
+        className="scroll-mt-24 bg-white py-24 text-slate-950"
+      >
+        <div className="mx-auto grid max-w-7xl gap-10 px-6 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-10">
+          <article>
+            <SectionLabel light>Our Store</SectionLabel>
+            <h2 className="font-display mt-6 text-4xl font-semibold uppercase tracking-[-0.05em] text-slate-950 sm:text-5xl">
+              Cycle and Toy Shop in Raysan, Gandhinagar.
+            </h2>
+            <p className="mt-6 text-base leading-8 text-slate-600">
+              The Funzo is your local cycle and toy store in Raysan,
+              Gandhinagar, Gujarat. We help families choose kids cycles,
+              bicycles, ride-on toys, remote cars, and fun toys with friendly
+              guidance and easy WhatsApp support.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                href={buildWhatsAppLink(settings.whatsapp_number)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-full bg-[#25D366] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#20bd5a]"
+              >
+                Chat on WhatsApp
+              </a>
+              <a
+                href={settings.address_url || storeSeo.googleBusinessUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-full border border-slate-200 px-6 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-400"
+              >
+                Get Directions
+              </a>
+            </div>
+          </article>
+
+          <div className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-100 shadow-[0_18px_55px_rgba(15,23,42,0.08)]">
+            <iframe
+              title="The Funzo cycle and toy store location in Raysan Gandhinagar"
+              src={storeSeo.googleMapsEmbedUrl}
+              width="100%"
+              height="420"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="block w-full"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="reviews"
+        className="scroll-mt-24 bg-[#f5fbff] py-24 text-slate-950"
+      >
         <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>

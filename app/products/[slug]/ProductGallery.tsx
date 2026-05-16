@@ -16,7 +16,9 @@ export default function ProductGallery({ images, name }: ProductGalleryProps) {
       <div className="w-full h-96 rounded-lg overflow-hidden border border-[#333333] bg-[#252525]">
         <FallbackImage
           src={images[selectedImage]}
-          alt={`${name} image ${selectedImage + 1}`}
+          alt={`${name} for sale at cycle shop in Gandhinagar image ${selectedImage + 1}`}
+          width={800}
+          height={600}
           className="w-full h-full object-cover"
           fallbackSrc="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop"
         />
@@ -37,7 +39,9 @@ export default function ProductGallery({ images, name }: ProductGalleryProps) {
             >
               <FallbackImage
                 src={image}
-                alt={`${name} thumbnail ${idx + 1}`}
+                alt={`${name} thumbnail at bicycle shop Gandhinagar ${idx + 1}`}
+                width={150}
+                height={150}
                 className="w-full h-full object-cover"
                 fallbackSrc="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=150&h=150&fit=crop"
               />

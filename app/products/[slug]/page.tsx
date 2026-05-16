@@ -7,6 +7,13 @@ import { buildWhatsAppLink, getStoreSettings } from "@/lib/store-settings";
 import Link from "next/link";
 import BackButton from "./BackButton";
 import ProductGallery from "./ProductGallery";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  breadcrumbSchema,
+  buildSeoMetadata,
+  productSchema,
+  storeSeo,
+} from "@/lib/seo";
 
 interface ProductPageProps {
   params: {
@@ -83,24 +90,35 @@ async function ProductContent({ slug }: { slug: string }) {
 
     return (
       <>
+        <JsonLd data={productSchema(typedProduct)} />
+        <JsonLd
+          data={breadcrumbSchema([
+            { name: "Home", url: "/" },
+            { name: category.name, url: `/category/${category.slug}` },
+            { name: typedProduct.name, url: `/product/${typedProduct.slug}` },
+          ])}
+        />
         {/* Breadcrumb + Back */}
         <div className="bg-[#1A1A1A] border-b border-[#333333] py-4">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm">
+              <nav
+                aria-label="Breadcrumb"
+                className="flex items-center gap-2 text-sm"
+              >
                 <Link href="/" className="text-[#E84A2F] hover:text-[#D63A1F]">
                   Home
                 </Link>
                 <span className="text-[#999999]">/</span>
                 <Link
-                  href={`/categories/${category.slug}`}
+                  href={`/category/${category.slug}`}
                   className="text-[#E84A2F] hover:text-[#D63A1F]"
                 >
                   {category.name}
                 </Link>
                 <span className="text-[#999999]">/</span>
                 <span className="text-[#CCCCCC]">{typedProduct.name}</span>
-              </div>
+              </nav>
               <BackButton />
             </div>
           </div>
@@ -128,7 +146,7 @@ async function ProductContent({ slug }: { slug: string }) {
               <div>
                 <p className="text-sm text-[#999999] mb-2">{category.name}</p>
                 <h1 className="text-4xl font-bold text-white mb-2">
-                  {typedProduct.name}
+                  {typedProduct.name} in Gandhinagar
                 </h1>
                 {typedProduct.age_range && (
                   <p className="text-sm text-[#CCCCCC]">
@@ -238,23 +256,46 @@ async function ProductContent({ slug }: { slug: string }) {
 }
 
 export async function generateMetadata({ params }: ProductPageProps) {
-  const supabase = createAdminClient();
-  const { data: product } = await supabase
-    .from("products")
-    .select("*")
-    .eq("slug", params.slug)
-    .single();
+  try {
+    const supabase = createAdminClient();
+    const { data: product } = await supabase
+      .from("products")
+      .select("*")
+      .eq("slug", params.slug)
+      .single();
 
-  if (!product) {
-    return {
-      title: "Product Not Found",
-    };
+    if (!product) {
+      return buildSeoMetadata({
+        title: "Product Not Found | The Funzo Gandhinagar",
+        description:
+          "Find kids cycles, bicycles and toys at The Funzo in Raysan, Gandhinagar.",
+        path: `/product/${params.slug}`,
+      });
+    }
+
+    const image = parseImages(product.images)[0] || storeSeo.image;
+
+    return buildSeoMetadata({
+      title: `${product.name} Gandhinagar | The Funzo`,
+      description:
+        product.description ||
+        `Buy ${product.name} at The Funzo cycle and toy store in Raysan, Gandhinagar.`,
+      path: `/product/${product.slug}`,
+      image,
+      keywords: [
+        `${product.name} Gandhinagar`,
+        `${product.name} Raysan`,
+        "kids cycle Gandhinagar",
+      ],
+    });
+  } catch {
+    return buildSeoMetadata({
+      title: "Cycle & Toy Product | The Funzo Gandhinagar",
+      description:
+        "Shop products at The Funzo, a cycle and toy store in Raysan, Gandhinagar.",
+      path: `/product/${params.slug}`,
+    });
   }
-
-  return {
-    title: `${product.name} | The Funzo`,
-    description: product.description || `Buy ${product.name}`,
-  };
 }
 
 export default function ProductPage({ params }: ProductPageProps) {

@@ -26,6 +26,16 @@ export async function middleware(request: NextRequest) {
 }
 
 // Configure which routes the middleware runs on
+// IMPORTANT: Only match actual page routes, not static assets or internal Next.js routes
 export const config = {
-  matcher: ["/admin/:path*", "/:path*"],
+  matcher: [
+    /*
+     * Match all request paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder assets
+     */
+    "/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+  ],
 };

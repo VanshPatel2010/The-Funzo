@@ -5,6 +5,33 @@
 
 import { NextResponse } from "next/server";
 
+const isProduction = process.env.NODE_ENV === "production";
+
+const scriptSrc = [
+  "'self'",
+  "'unsafe-inline'",
+  !isProduction ? "'unsafe-eval'" : "",
+  "*.vercel.app",
+]
+  .filter(Boolean)
+  .join(" ");
+
+const connectSrc = [
+  "'self'",
+  "*.supabase.co",
+  "*.vercel.app",
+  "unsplash.com",
+  "*.unsplash.com",
+  !isProduction ? "ws://localhost:*" : "",
+  !isProduction ? "http://localhost:*" : "",
+]
+  .filter(Boolean)
+  .join(" ");
+
+const productionOnlyDirectives = isProduction
+  ? "upgrade-insecure-requests; "
+  : "";
+
 /**
  * Security headers to prevent common attacks
  */
@@ -22,16 +49,20 @@ export const securityHeaders = {
   "Referrer-Policy": "strict-origin-when-cross-origin",
 
   // Content Security Policy - prevent inline scripts and restrict resource loading
+  // In dev mode, additional origins (localhost, ws://) are needed for HMR
   "Content-Security-Policy":
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.app; " +
-    "style-src 'self' 'unsafe-inline'; " +
+    `script-src ${scriptSrc}; ` +
+    "style-src 'self' 'unsafe-inline' fonts.googleapis.com; " +
     "img-src 'self' data: https: *.supabase.co *.vercel.app unsplash.com *.unsplash.com images.unsplash.com; " +
-    "font-src 'self' data:; " +
-    "connect-src 'self' *.supabase.co *.vercel.app unsplash.com *.unsplash.com; " +
+    "font-src 'self' data: fonts.gstatic.com; " +
+    `connect-src ${connectSrc}; ` +
+    "frame-src 'self' https://www.google.com https://maps.google.com; " +
+    "object-src 'none'; " +
     "frame-ancestors 'self'; " +
     "base-uri 'self'; " +
-    "form-action 'self'",
+    "form-action 'self'; " +
+    productionOnlyDirectives,
 
   // Strict Transport Security - enforce HTTPS
   "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",

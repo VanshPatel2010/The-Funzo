@@ -47,7 +47,7 @@ function ImageCarousel({
 
   return (
     <Link
-      href={`/products/${slug}`}
+      href={`/product/${slug}`}
       className="relative aspect-[4/3] overflow-hidden bg-secondary-50 group block cursor-pointer"
     >
       <AnimatePresence mode="wait">
@@ -63,7 +63,8 @@ function ImageCarousel({
             src={
               failedImages.has(current) ? FALLBACK_IMAGE : validImages[current]
             }
-            alt={`${name} - image ${current + 1}`}
+            alt={`${name} for sale at cycle and toy store in Gandhinagar image ${current + 1}`}
+            loading="lazy"
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
@@ -246,7 +247,7 @@ function ProductCard({ product }: { product: Product }) {
 
         {/* Name */}
         <Link
-          href={`/products/${product.slug}`}
+          href={`/product/${product.slug}`}
           className="text-base sm:text-lg font-bold text-secondary leading-snug mb-1.5 hover:text-primary transition-colors"
         >
           {product.name}

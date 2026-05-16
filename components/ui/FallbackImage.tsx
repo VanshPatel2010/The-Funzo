@@ -10,6 +10,7 @@ export function FallbackImage({
   fallbackSrc,
   src,
   alt,
+  loading,
   ...props
 }: FallbackImageProps) {
   const [imgSrc, setImgSrc] = useState(src || fallbackSrc);
@@ -23,6 +24,7 @@ export function FallbackImage({
     <img
       src={imgSrc}
       alt={alt || ""}
+      loading={loading || "lazy"}
       onError={() => {
         setImgSrc(fallbackSrc);
       }}

@@ -39,7 +39,7 @@ function CategoryCard({ category }: { category: Category }) {
   return (
     <motion.div variants={cardVariants}>
       <Link
-        href={`/categories/${category.slug}`}
+        href={`/category/${category.slug}`}
         className="group block bg-white rounded-2xl overflow-hidden border border-secondary-100/60 shadow-sm hover:shadow-xl hover:shadow-secondary/5 transition-all duration-300"
       >
         {/* Image */}
@@ -49,7 +49,8 @@ function CategoryCard({ category }: { category: Category }) {
               category.image_url ||
               "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop"
             }
-            alt={category.name}
+            alt={`${category.name} collection at cycle and toy store in Gandhinagar`}
+            loading="lazy"
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 400px"
             className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"

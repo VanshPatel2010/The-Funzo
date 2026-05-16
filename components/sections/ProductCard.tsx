@@ -36,7 +36,7 @@ function ImageCarousel({
 
   return (
     <Link
-      href={`/products/${slug}`}
+      href={`/product/${slug}`}
       className="relative aspect-[4/3] overflow-hidden bg-secondary-50 group cursor-pointer block"
     >
       <AnimatePresence mode="wait">
@@ -52,7 +52,8 @@ function ImageCarousel({
             src={
               failedImages.has(current) ? FALLBACK_IMAGE : validImages[current]
             }
-            alt={`${name} - image ${current + 1}`}
+            alt={`${name} at cycle and toy store in Gandhinagar - image ${current + 1}`}
+            loading="lazy"
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
@@ -223,7 +224,8 @@ export function ProductCard({ product, showLink = true }: ProductCardProps) {
           {parseImages(product.images).length > 0 ? (
             <Image
               src={parseImages(product.images)[0]}
-              alt={product.name}
+              alt={`${product.name} for sale in Gandhinagar`}
+              loading="lazy"
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover"
@@ -273,7 +275,7 @@ export function ProductCard({ product, showLink = true }: ProductCardProps) {
         {/* Name */}
         {showLink ? (
           <Link
-            href={`/products/${product.slug}`}
+            href={`/product/${product.slug}`}
             className="text-base sm:text-lg font-bold text-secondary leading-snug mb-1.5 hover:text-primary transition-colors"
           >
             {product.name}

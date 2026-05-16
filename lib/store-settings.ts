@@ -6,7 +6,7 @@ export const defaultStoreSettings: StoreSettings = {
   contact_number: "+91 6354 955 653",
   whatsapp_number: "916354955653",
   instagram_url: "https://www.instagram.com/thefunzo1/",
-  address_url: "https://share.google/R8gBmW9VrypRLlC3m",
+  address_url: "https://maps.app.goo.gl/Ug1wchUiHDjiyT5z8",
   created_at: "",
   updated_at: "",
 };

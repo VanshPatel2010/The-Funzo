@@ -15,6 +15,17 @@ import {
 
 const productIdSchema = z.string().uuid();
 
+function revalidateProductPaths(slug?: string) {
+  revalidatePath("/");
+  revalidatePath("/admin/products");
+  revalidatePath("/search");
+
+  if (slug) {
+    revalidatePath(`/product/${slug}`);
+    revalidatePath(`/products/${slug}`);
+  }
+}
+
 /**
  * Generate a slug from a product name with validation
  */
@@ -84,7 +95,7 @@ export async function createProduct(data: ProductFormData) {
       category_id: product.category_id,
     });
 
-    revalidatePath("/", "layout");
+    revalidateProductPaths(product.slug);
     return { success: true, product };
   } catch (error) {
     const { message, isValidationError } = handleServerError(error);
@@ -142,7 +153,7 @@ export async function updateProduct(
     // ✅ Audit logging
     await createAuditLog("UPDATE", "product", id, validatedData);
 
-    revalidatePath("/", "layout");
+    revalidateProductPaths(product.slug);
     return { success: true, product };
   } catch (error) {
     const { message, isValidationError } = handleServerError(error);
@@ -172,14 +183,19 @@ export async function deleteProduct(id: string) {
 
     const client = createAdminClient();
 
-    const { error } = await client.from("products").delete().eq("id", id);
+    const { data: product, error } = await client
+      .from("products")
+      .delete()
+      .eq("id", id)
+      .select("slug")
+      .single();
 
     if (error) throw error;
 
     // ✅ Audit logging
     await createAuditLog("DELETE", "product", id);
 
-    revalidatePath("/", "layout");
+    revalidateProductPaths(product?.slug);
     return { success: true };
   } catch (error) {
     const { message } = handleServerError(error);

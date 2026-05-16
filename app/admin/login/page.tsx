@@ -12,7 +12,11 @@ function AdminLoginContent() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const callbackUrl = searchParams.get("callbackUrl") || "/admin/dashboard";
+  const callbackUrlParam = searchParams.get("callbackUrl");
+  const callbackUrl =
+    callbackUrlParam?.startsWith("/admin") && !callbackUrlParam.startsWith("//")
+      ? callbackUrlParam
+      : "/admin/dashboard";
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();

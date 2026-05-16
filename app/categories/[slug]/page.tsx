@@ -4,6 +4,13 @@ import { Product } from "@/lib/types";
 import { ProductCard } from "@/components/sections/ProductCard";
 import { FallbackImage } from "@/components/ui";
 import Link from "next/link";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  breadcrumbSchema,
+  buildSeoMetadata,
+  itemListSchema,
+  localDescription,
+} from "@/lib/seo";
 
 interface CategoryPageProps {
   params: {
@@ -59,10 +66,20 @@ async function CategoryContent({ slug }: { slug: string }) {
 
     return (
       <>
+        <JsonLd data={itemListSchema(category, categoryProducts)} />
+        <JsonLd
+          data={breadcrumbSchema([
+            { name: "Home", url: "/" },
+            { name: category.name, url: `/category/${category.slug}` },
+          ])}
+        />
         {/* Category Header */}
         <div className="bg-gradient-to-r from-[#1A1A1A] to-[#252525] border-b border-[#333333] py-12">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-4 mb-6">
+            <nav
+              aria-label="Breadcrumb"
+              className="flex items-center gap-4 mb-6"
+            >
               <Link
                 href="/"
                 className="text-[#E84A2F] hover:text-[#D63A1F] transition-colors"
@@ -71,13 +88,15 @@ async function CategoryContent({ slug }: { slug: string }) {
               </Link>
               <span className="text-[#999999]">/</span>
               <span className="text-[#999999]">{category.name}</span>
-            </div>
+            </nav>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {category.image_url && category.image_url.trim() && (
                 <div className="h-64 rounded-lg overflow-hidden border border-[#333333] bg-[#252525]">
                   <FallbackImage
                     src={category.image_url}
-                    alt={category.name}
+                    alt={`${category.name} at cycle and toy store in Raysan Gandhinagar`}
+                    width={400}
+                    height={300}
                     className="w-full h-full object-cover"
                     fallbackSrc="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop"
                   />
@@ -89,7 +108,7 @@ async function CategoryContent({ slug }: { slug: string }) {
                 }
               >
                 <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-                  {category.name}
+                  {category.name} in Gandhinagar
                 </h1>
                 {category.description && (
                   <p className="text-[#CCCCCC] text-lg mb-6">
@@ -115,7 +134,9 @@ async function CategoryContent({ slug }: { slug: string }) {
             </div>
           ) : (
             <>
-              <h2 className="text-2xl font-bold text-white mb-8">Products</h2>
+              <h2 className="text-2xl font-bold text-white mb-8">
+                {category.name} Products in Raysan
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {categoryProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
@@ -148,23 +169,39 @@ async function CategoryContent({ slug }: { slug: string }) {
 }
 
 export async function generateMetadata({ params }: CategoryPageProps) {
-  const supabase = createAdminClient();
-  const { data: category } = await supabase
-    .from("categories")
-    .select("*")
-    .eq("slug", params.slug)
-    .single();
+  try {
+    const supabase = createAdminClient();
+    const { data: category } = await supabase
+      .from("categories")
+      .select("*")
+      .eq("slug", params.slug)
+      .single();
 
-  if (!category) {
-    return {
-      title: "Category Not Found",
-    };
+    if (!category) {
+      return buildSeoMetadata({
+        title: "Category Not Found | The Funzo Gandhinagar",
+        description:
+          "Find cycles, bicycles and toys at The Funzo in Raysan, Gandhinagar.",
+        path: `/category/${params.slug}`,
+      });
+    }
+
+    return buildSeoMetadata({
+      title: `${category.name} Gandhinagar | The Funzo Store`,
+      description:
+        category.description ||
+        localDescription(`Shop ${category.name} in Gandhinagar`),
+      path: `/category/${category.slug}`,
+      keywords: [`${category.name} Gandhinagar`, `${category.name} Raysan`],
+    });
+  } catch {
+    return buildSeoMetadata({
+      title: "Cycle & Toy Category | The Funzo Gandhinagar",
+      description:
+        "Browse local cycle and toy categories at The Funzo in Raysan, Gandhinagar.",
+      path: `/category/${params.slug}`,
+    });
   }
-
-  return {
-    title: `${category.name} | The Funzo`,
-    description: category.description || `Browse ${category.name} products`,
-  };
 }
 
 export default function CategoryPage({ params }: CategoryPageProps) {

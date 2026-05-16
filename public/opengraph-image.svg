@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="The Funzo cycle and toy store in Gandhinagar">
+  <rect width="1200" height="630" fill="#071018"/>
+  <rect x="64" y="64" width="1072" height="502" rx="42" fill="#0b1a25" stroke="#25d0df" stroke-opacity=".35" stroke-width="3"/>
+  <text x="104" y="175" fill="#f3f7fb" font-family="Arial, sans-serif" font-size="76" font-weight="800">The Funzo</text>
+  <text x="104" y="250" fill="#25d0df" font-family="Arial, sans-serif" font-size="42" font-weight="700">Cycle &amp; Toy Store in Gandhinagar</text>
+  <text x="104" y="315" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="32">Kids cycles, bicycles and toys in Raysan, Gujarat</text>
+  <circle cx="780" cy="408" r="78" fill="none" stroke="#25d0df" stroke-width="30"/>
+  <circle cx="970" cy="408" r="78" fill="none" stroke="#76e4a6" stroke-width="30"/>
+  <path d="M790 408 858 280h64l48 128M858 280l-42 128h154M858 280h-54" fill="none" stroke="#f3f7fb" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

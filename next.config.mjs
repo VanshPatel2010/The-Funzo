@@ -2,6 +2,20 @@ import { resolve } from "path";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/categories/:slug",
+        destination: "/category/:slug",
+        permanent: true,
+      },
+      {
+        source: "/products/:slug",
+        destination: "/product/:slug",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {
@@ -14,19 +28,21 @@ const nextConfig = {
     optimizePackageImports: ["framer-motion"],
   },
   webpack: (config, { dev, isServer }) => {
-    try {
-      // Enable PackFile cache options to allow Buffer conversion for large strings
-      // and move cache out of node_modules to avoid rename/permission issues.
-      config.cache = {
-        type: "filesystem",
-        store: "pack",
-        allowCollectingMemory: true,
-        readonly: false,
-        cacheDirectory: resolve(process.cwd(), ".next", "cache", "webpack"),
-        compression: "gzip",
-      };
-    } catch (e) {
-      console.warn("Failed to set custom webpack cache options:", e);
+    // Only apply custom cache options for production builds.
+    // In dev mode, Next.js default in-memory caching is faster.
+    if (!dev) {
+      try {
+        config.cache = {
+          type: "filesystem",
+          store: "pack",
+          allowCollectingMemory: true,
+          readonly: false,
+          cacheDirectory: resolve(process.cwd(), ".next", "cache", "webpack"),
+          compression: "gzip",
+        };
+      } catch (e) {
+        console.warn("Failed to set custom webpack cache options:", e);
+      }
     }
 
     return config;

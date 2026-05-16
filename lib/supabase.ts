@@ -32,7 +32,19 @@ export { supabase };
 // ─── Server-Side Supabase Client (Admin) ────────────────────────────────────
 // Uses the service role key — NEVER expose to the browser.
 // Only import this in server components, API routes, or server actions.
-export function createAdminClient() {
+// Uses a singleton pattern to avoid creating new clients on every call,
+// which is critical for dev mode performance with HMR.
+
+// Store the admin client on globalThis to survive HMR in dev mode
+const globalForSupabase = globalThis as unknown as {
+  supabaseAdmin: SupabaseClient | undefined;
+};
+
+export function createAdminClient(): SupabaseClient {
+  if (globalForSupabase.supabaseAdmin) {
+    return globalForSupabase.supabaseAdmin;
+  }
+
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -42,10 +54,17 @@ export function createAdminClient() {
     );
   }
 
-  return createClient(url, serviceRoleKey, {
+  const client = createClient(url, serviceRoleKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
     },
   });
+
+  // Cache the client in dev mode to avoid re-creating on every HMR
+  if (process.env.NODE_ENV !== "production") {
+    globalForSupabase.supabaseAdmin = client;
+  }
+
+  return client;
 }

@@ -1,0 +1,22 @@
+{
+  "name": "The Funzo - Cycle and Toy Store in Gandhinagar",
+  "short_name": "The Funzo",
+  "description": "Cycle and toy store in Raysan, Gandhinagar for kids cycles, bicycles and toys.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#071018",
+  "theme_color": "#071018",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

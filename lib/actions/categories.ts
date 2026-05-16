@@ -15,6 +15,17 @@ import {
 
 const categoryIdSchema = z.string().uuid();
 
+function revalidateCategoryPaths(slug?: string) {
+  revalidatePath("/");
+  revalidatePath("/admin/categories");
+  revalidatePath("/search");
+
+  if (slug) {
+    revalidatePath(`/category/${slug}`);
+    revalidatePath(`/categories/${slug}`);
+  }
+}
+
 /**
  * Create a new category (PROTECTED - Admin only)
  */
@@ -62,7 +73,7 @@ export async function createCategory(data: CategoryFormData) {
       slug: category.slug,
     });
 
-    revalidatePath("/admin/categories");
+    revalidateCategoryPaths(category.slug);
     return { success: true, category };
   } catch (error) {
     const { message, isValidationError } = handleServerError(error);
@@ -125,7 +136,7 @@ export async function updateCategory(
     // ✅ Audit logging
     await createAuditLog("UPDATE", "category", id, validatedData);
 
-    revalidatePath("/admin/categories");
+    revalidateCategoryPaths(category.slug);
     return { success: true, category };
   } catch (error) {
     const { message, isValidationError } = handleServerError(error);
@@ -155,14 +166,19 @@ export async function deleteCategory(id: string) {
 
     const client = createAdminClient();
 
-    const { error } = await client.from("categories").delete().eq("id", id);
+    const { data: category, error } = await client
+      .from("categories")
+      .delete()
+      .eq("id", id)
+      .select("slug")
+      .single();
 
     if (error) throw error;
 
     // ✅ Audit logging
     await createAuditLog("DELETE", "category", id);
 
-    revalidatePath("/admin/categories");
+    revalidateCategoryPaths(category?.slug);
     return { success: true };
   } catch (error) {
     const { message } = handleServerError(error);
@@ -216,7 +232,7 @@ export async function reorderCategories(
       count: updates.length,
     });
 
-    revalidatePath("/admin/categories");
+    revalidateCategoryPaths();
     return { success: true };
   } catch (error) {
     const { message, isValidationError } = handleServerError(error);

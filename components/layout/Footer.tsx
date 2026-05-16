@@ -3,12 +3,15 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { StoreSettings } from "@/lib/types";
+import { buildWhatsAppLink } from "@/lib/store-settings";
+import { storeSeo } from "@/lib/seo";
 
 const footerLinks = [
-  { label: "Featured", href: "#featured" },
-  { label: "Showcase", href: "#showcase" },
-  { label: "Story", href: "#story" },
-  { label: "Reviews", href: "#reviews" },
+  { label: "Featured", href: "/#featured" },
+  { label: "Categories", href: "/#categories" },
+  { label: "Our Store", href: "/#store" },
+  { label: "Reviews", href: "/#reviews" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 function InstagramIcon() {
@@ -77,7 +80,7 @@ export default function Footer({ settings }: { settings: StoreSettings }) {
   return (
     <footer
       id="contact"
-      className="border-t border-white/6 bg-[#071018] text-slate-300"
+      className="scroll-mt-24 border-t border-white/6 bg-[#071018] text-slate-300"
     >
       <motion.div
         variants={containerVariants}
@@ -97,8 +100,8 @@ export default function Footer({ settings }: { settings: StoreSettings }) {
               </span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-300">
-              Premium bicycles for kids and boys, designed to feel sporty,
-              dependable, and exciting from the very first ride.
+              Local cycle and toy store in Raysan, Gandhinagar for kids cycles,
+              family bicycles, toys, and friendly buying guidance.
             </p>
             <p className="mt-3 text-xs font-semibold uppercase tracking-[0.28em] text-[#76bce7]">
               Ride. Grow. Explore.
@@ -133,7 +136,7 @@ export default function Footer({ settings }: { settings: StoreSettings }) {
                 (cat) => (
                   <li key={cat}>
                     <Link
-                      href="#featured"
+                      href="/#featured"
                       className="group inline-flex items-center gap-1.5 text-sm text-slate-300 transition-colors duration-200 hover:text-white"
                     >
                       <span className="h-[2px] w-0 rounded-full bg-[#76bce7] transition-all duration-200 group-hover:w-2" />
@@ -160,7 +163,13 @@ export default function Footer({ settings }: { settings: StoreSettings }) {
                   <span className="mt-0.5 text-slate-400 transition-colors duration-200 group-hover:text-sky-100">
                     <MapPinIcon />
                   </span>
-                  <span>Visit The Funzo bicycle store near you</span>
+                  <address className="not-italic">
+                    The Funzo
+                    <br />
+                    {storeSeo.streetAddress}, {storeSeo.city}
+                    <br />
+                    {storeSeo.region} {storeSeo.postalCode}, India
+                  </address>
                 </a>
               </li>
               <li>
@@ -187,6 +196,19 @@ export default function Footer({ settings }: { settings: StoreSettings }) {
                     <PhoneIcon />
                   </span>
                   <span>{settings.contact_number}</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href={buildWhatsAppLink(settings.whatsapp_number)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-3 text-sm text-slate-300 transition-colors duration-200 hover:text-white"
+                >
+                  <span className="text-[#25D366]">
+                    <PhoneIcon />
+                  </span>
+                  <span>WhatsApp The Funzo</span>
                 </a>
               </li>
             </ul>

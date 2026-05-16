@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 
 // Map link provided by user
-const MAP_LINK = "https://share.google/R8gBmW9VrypRLlC3m";
+const MAP_LINK = "https://maps.app.goo.gl/Ug1wchUiHDjiyT5z8";
 // Fake google map embed URL for visual representation
 const MAP_EMBED_URL =
   "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117925.3323565576!2d88.26495111244498!3d22.535406456076412!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a0277aec11121d5%3A0xe2130e6981881dc6!2sCycle%20Store!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin";

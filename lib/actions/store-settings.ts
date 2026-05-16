@@ -48,16 +48,27 @@ function validateStoreSettingsUrls(data: StoreSettingsFormData): void {
         }
       }
 
-      // For address, accept Google Maps or similar
-      if (field === "address_url" && !url.includes("maps.google.com")) {
-        // Accept other map services as well
-        if (
-          !url.includes("google.com") &&
-          !url.includes("apple.com") &&
-          !url.includes("openstreetmap")
-        ) {
-          // Allow plain text addresses or relative URLs for now
-          continue;
+      if (field === "address_url") {
+        const allowedMapHosts = [
+          "google.com",
+          "maps.google.com",
+          "maps.app.goo.gl",
+          "goo.gl",
+          "apple.com",
+          "maps.apple.com",
+          "openstreetmap.org",
+          "www.openstreetmap.org",
+        ];
+
+        const isAllowedMapHost = allowedMapHosts.some(
+          (host) =>
+            urlObj.hostname === host || urlObj.hostname.endsWith(`.${host}`)
+        );
+
+        if (!isAllowedMapHost) {
+          throw new Error(
+            "Address URL must be a valid Google Maps, Apple Maps, or OpenStreetMap link"
+          );
         }
       }
     } catch (error) {

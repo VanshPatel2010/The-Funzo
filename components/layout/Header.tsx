@@ -7,10 +7,10 @@ import type { StoreSettings } from "@/lib/types";
 import { SearchBar } from "@/components/sections/SearchBar";
 
 const navLinks = [
-  { label: "Collection", href: "#featured" },
-  { label: "Showcase", href: "#showcase" },
-  { label: "Story", href: "#story" },
-  { label: "Reviews", href: "#reviews" },
+  { label: "Collection", href: "/#featured" },
+  { label: "Categories", href: "/#categories" },
+  { label: "Store", href: "/#store" },
+  { label: "Reviews", href: "/#reviews" },
 ];
 
 function HamburgerIcon({ open }: { open: boolean }) {
@@ -95,7 +95,7 @@ export default function Header({ settings }: { settings: StoreSettings }) {
 
           <div className="hidden md:block">
             <Link
-              href="#contact"
+              href="/#contact"
               className="inline-flex items-center rounded-full bg-[#f3f7fb] px-5 py-3 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-slate-900 transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(173,222,255,0.18)]"
             >
               Contact Us
@@ -167,7 +167,7 @@ export default function Header({ settings }: { settings: StoreSettings }) {
                   className="mt-8"
                 >
                   <Link
-                    href="#contact"
+                    href="/#contact"
                     onClick={() => setMobileOpen(false)}
                     className="flex w-full items-center justify-center rounded-full bg-[#f3f7fb] py-3.5 text-sm font-semibold uppercase tracking-[0.22em] text-slate-900 transition duration-200"
                   >

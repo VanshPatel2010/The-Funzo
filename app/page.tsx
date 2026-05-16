@@ -1,32 +1,25 @@
-import Script from "next/script";
 import BicycleHome from "@/components/sections/BicycleHome";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  buildSeoMetadata,
+  localBusinessSchema,
+  reviewSchema,
+  websiteSchema,
+} from "@/lib/seo";
+
+export const metadata = buildSeoMetadata({
+  title: "Cycle & Toy Store in Gandhinagar | The Funzo",
+  description:
+    "Visit The Funzo, a cycle and toy store in Raysan, Gandhinagar for kids cycles, bicycles, toys and family gifts near you.",
+  path: "/",
+});
 
 export default function Home() {
-  const localBusinessSchema = {
-    "@context": "https://schema.org",
-    "@type": ["Store", "BicycleStore", "ToyStore"],
-    name: "The Funzo",
-    description:
-      "Cycle and toy store in Raysan, Gandhinagar for kids cycles, family bicycles, and toys.",
-    areaServed: ["Raysan", "Gandhinagar"],
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Raysan",
-      addressRegion: "Gujarat",
-      addressCountry: "IN",
-    },
-    url: "https://thefunzo.com",
-  };
-
   return (
     <>
-      <Script
-        id="the-funzo-local-business"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(localBusinessSchema),
-        }}
-      />
+      <JsonLd data={localBusinessSchema()} />
+      <JsonLd data={websiteSchema()} />
+      <JsonLd data={reviewSchema()} />
       <BicycleHome />
     </>
   );
