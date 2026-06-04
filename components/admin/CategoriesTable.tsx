@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Category } from "@/lib/types";
 import { CategoryForm } from "./CategoryForm";
@@ -39,6 +39,10 @@ export function CategoriesTable({ initialCategories }: CategoriesTableProps) {
     null
   );
   const [isReordering, setIsReordering] = useState(false);
+
+  useEffect(() => {
+    setCategories(initialCategories);
+  }, [initialCategories]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),

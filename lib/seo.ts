@@ -3,7 +3,16 @@ import type { Category, Product, ProductWithCategory } from "@/lib/types";
 import { defaultStoreSettings } from "@/lib/store-settings";
 import { parseImages } from "@/lib/helpers";
 
-export const siteUrl = "https://thefunzo.com";
+function getSiteUrl() {
+  const url =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.NEXTAUTH_URL ||
+    "https://thefunzo.com";
+
+  return url.replace(/\/+$/, "");
+}
+
+export const siteUrl = getSiteUrl();
 
 export const localSeoKeywords = [
   "cycle store in Gandhinagar",

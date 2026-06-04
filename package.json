@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "NODE_OPTIONS=\"--no-experimental-strip-types\" SYNCKIT_EXEC_ARGV=\"\" next dev",
     "build": "next build",
+    "predeploy": "npm run lint && npx tsc --noEmit && npm run build",
     "start": "next start",
     "lint": "next lint"
   },

@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Funzo
 
-## Getting Started
+Next.js storefront and admin panel for The Funzo product catalogue.
 
-First, run the development server:
+## Local Development
 
 ```bash
+cp .env.example .env.local
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Required Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Set these locally and in production:
 
-## Learn More
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+NEXT_PUBLIC_SITE_URL=
+```
 
-To learn more about Next.js, take a look at the following resources:
+- `NEXTAUTH_URL` and `NEXT_PUBLIC_SITE_URL` must be the final production origin, for example `https://thefunzo.com`.
+- `SUPABASE_SERVICE_ROLE_KEY` is server-only. Never expose it in client code or public dashboards.
+- Generate `NEXTAUTH_SECRET` with `openssl rand -base64 32`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Supabase Setup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Apply the SQL schema and migrations before deploying:
 
-## Deploy on Vercel
+```text
+supabase/schema.sql
+supabase/migrations/20260506_add_store_settings.sql
+supabase/migrations/20260604_create_product_images_bucket.sql
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The `product-images` storage bucket must exist and be public-read. The upload
+server action also attempts to create it automatically if the service role key
+has bucket-management permissions.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Production Checklist
+
+- Set all required environment variables in the hosting provider.
+- Rotate any credentials that were ever committed, logged, or shared.
+- Create at least one admin in `admins` and `admin_credentials`.
+- Run `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
+- Verify `/admin/login`, product creation, category creation, image upload, sitemap, and public product pages after deployment.
+
+## Deploy
+
+Recommended target: Vercel.
+
+```bash
+npm run build
+```
+
+Use the default Next.js build command and output settings. No static export is
+required because the app uses server actions, authenticated admin pages, and
+dynamic Supabase data.

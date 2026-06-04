@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Product, Category } from "@/lib/types";
 import { ProductForm } from "./ProductForm";
@@ -17,12 +17,16 @@ export function ProductsTable({
   categories,
 }: ProductsTableProps) {
   const router = useRouter();
-  const [products] = useState<Product[]>(initialProducts);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    setProducts(initialProducts);
+  }, [initialProducts]);
 
   const handleAddClick = () => {
     setSelectedProduct(undefined);

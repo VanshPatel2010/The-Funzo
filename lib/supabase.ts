@@ -5,6 +5,9 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
+const missingSupabaseClientMessage =
+  "Supabase client is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your deployment environment.";
+
 // Guard: only create the client if env vars are present
 // This prevents build-time errors when .env.local is not yet configured
 
@@ -19,9 +22,7 @@ if (supabaseUrl && supabaseAnonKey) {
     get(_, prop) {
       if (prop === "then") return undefined; // prevent Promise-like behavior
       return () => {
-        throw new Error(
-          "Supabase client is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local"
-        );
+        throw new Error(missingSupabaseClientMessage);
       };
     },
   });
@@ -50,7 +51,7 @@ export function createAdminClient(): SupabaseClient {
 
   if (!url || !serviceRoleKey) {
     throw new Error(
-      "NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set in .env.local"
+      "NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set in your deployment environment"
     );
   }
 

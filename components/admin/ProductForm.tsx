@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ChangeEvent } from "react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -13,6 +14,7 @@ import {
   createProduct as createProductAction,
   updateProduct as updateProductAction,
 } from "@/lib/actions/products";
+import { uploadProductImage } from "@/lib/actions/product-images";
 import { parseImages } from "@/lib/helpers";
 
 interface ProductFormProps {
@@ -31,9 +33,9 @@ export function ProductForm({
   onSuccess,
 }: ProductFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [tagInput, setTagInput] = useState("");
-  const [imageInput, setImageInput] = useState("");
 
   const {
     register,
@@ -104,16 +106,67 @@ export function ProductForm({
     );
   };
 
-  const handleAddImage = () => {
+  const handleUploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(event.target.files || []);
+    event.target.value = "";
+
+    if (selectedFiles.length === 0) return;
+
     if (images.length >= 4) {
       setSubmitError("You can add up to 4 product images");
       return;
     }
 
-    if (imageInput.trim() && !images.includes(imageInput.trim())) {
-      setValue("images", [...images, imageInput.trim()]);
-      setImageInput("");
+    if (images.length + selectedFiles.length > 4) {
+      setSubmitError(
+        `You can upload ${4 - images.length} more product image${
+          4 - images.length === 1 ? "" : "s"
+        }`
+      );
+      return;
+    }
+
+    const invalidFile = selectedFiles.find(
+      (file) =>
+        !["image/jpeg", "image/png", "image/webp"].includes(file.type) ||
+        file.size > 5 * 1024 * 1024
+    );
+
+    if (invalidFile) {
+      setSubmitError(
+        "Product images must be JPG, PNG, or WebP and 5MB or smaller"
+      );
+      return;
+    }
+
+    try {
+      setIsUploadingImages(true);
       setSubmitError(null);
+
+      const uploadedImages: string[] = [];
+
+      for (const file of selectedFiles) {
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const result = await uploadProductImage(formData);
+
+        if (!result.success || !result.url) {
+          throw new Error(result.error || "Failed to upload product image");
+        }
+
+        uploadedImages.push(result.url);
+      }
+
+      setValue("images", [...images, ...uploadedImages]);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Failed to upload product image"
+      );
+    } finally {
+      setIsUploadingImages(false);
     }
   };
 
@@ -290,34 +343,23 @@ export function ProductForm({
                 Product Images
               </label>
               <p className="text-xs text-[#999999] mb-3">
-                Add up to 4 image URLs. Customers can switch images on the
-                product card and product page.
+                Upload up to 4 product images. Customers can switch images on
+                the product card and product page.
               </p>
-              <div className="flex gap-2 mb-3">
+              <div className="mb-3">
                 <input
-                  type="url"
-                  value={imageInput}
-                  onChange={(e) => setImageInput(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleAddImage();
-                    }
-                  }}
-                  className="flex-1 px-4 py-2.5 bg-[#252525] border border-[#333333] rounded-lg text-white placeholder-[#666666] focus:outline-none focus:border-[#E84A2F] transition-colors"
-                  placeholder="https://example.com/image.jpg"
-                />
-                <button
-                  type="button"
-                  onClick={handleAddImage}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  multiple
+                  onChange={handleUploadImages}
                   disabled={images.length >= 4}
-                  className="px-4 py-2.5 rounded-lg bg-[#E84A2F] text-white font-semibold hover:bg-[#D63A1F] transition-colors"
-                >
-                  Add
-                </button>
+                  className="w-full px-4 py-2.5 bg-[#252525] border border-[#333333] rounded-lg text-white file:mr-4 file:px-4 file:py-2 file:rounded-lg file:border-0 file:bg-[#E84A2F] file:text-white file:font-semibold hover:file:bg-[#D63A1F] file:transition-colors disabled:opacity-50"
+                />
               </div>
               <p className="text-xs text-[#999999] mb-3">
-                {images.length}/4 images added
+                {isUploadingImages
+                  ? "Uploading images..."
+                  : `${images.length}/4 images added. JPG, PNG, or WebP up to 5MB each.`}
               </p>
               {errors.images && (
                 <p className="text-xs text-red-400 mt-1">
@@ -329,10 +371,17 @@ export function ProductForm({
                   {images.map((image, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between bg-[#252525] border border-[#333333] rounded-lg p-3"
+                      className="flex items-center gap-3 bg-[#252525] border border-[#333333] rounded-lg p-3"
                     >
-                      <span className="text-sm text-[#999999] truncate">
-                        {image}
+                      <Image
+                        src={image}
+                        alt={`Product image ${idx + 1}`}
+                        width={56}
+                        height={56}
+                        className="h-14 w-14 rounded-lg object-cover bg-[#1A1A1A]"
+                      />
+                      <span className="flex-1 text-sm text-[#999999] truncate">
+                        Image {idx + 1}
                       </span>
                       <button
                         type="button"
@@ -431,10 +480,14 @@ export function ProductForm({
               </button>
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isUploadingImages}
                 className="flex-1 px-4 py-2.5 rounded-lg bg-[#E84A2F] text-white font-semibold hover:bg-[#D63A1F] disabled:opacity-50 transition-colors"
               >
-                {isSubmitting ? "Saving..." : "Save Product"}
+                {isSubmitting
+                  ? "Saving..."
+                  : isUploadingImages
+                    ? "Uploading..."
+                    : "Save Product"}
               </button>
             </div>
           </form>
