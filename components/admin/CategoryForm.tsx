@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ChangeEvent } from "react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categoryFormSchema, Category } from "@/lib/types";
 import { createCategory, updateCategory } from "@/lib/actions/categories";
+import { uploadCategoryImage } from "@/lib/actions/category-images";
 import { generateSlug } from "@/lib/slug-utils";
 
 interface CategoryFormProps {
@@ -21,6 +23,7 @@ export function CategoryForm({
   onSuccess,
 }: CategoryFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
@@ -42,6 +45,7 @@ export function CategoryForm({
   });
 
   const nameValue = watch("name");
+  const imageUrl = watch("image_url");
 
   // Reset form when category changes (switching between edit/create or different category)
   useEffect(() => {
@@ -69,6 +73,51 @@ export function CategoryForm({
     if (!category && value !== nameValue) {
       setValue("slug", generateSlug(value));
     }
+  };
+
+  const handleUploadImage = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+
+    if (!file) return;
+
+    if (
+      !["image/jpeg", "image/png", "image/webp"].includes(file.type) ||
+      file.size > 5 * 1024 * 1024
+    ) {
+      setSubmitError(
+        "Category image must be JPG, PNG, or WebP and 5MB or smaller"
+      );
+      return;
+    }
+
+    try {
+      setIsUploadingImage(true);
+      setSubmitError(null);
+
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const result = await uploadCategoryImage(formData);
+
+      if (!result.success || !result.url) {
+        throw new Error(result.error || "Failed to upload category image");
+      }
+
+      setValue("image_url", result.url);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Failed to upload category image"
+      );
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setValue("image_url", "");
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -199,20 +248,44 @@ export function CategoryForm({
               />
             </div>
 
-            {/* Image URL */}
+            {/* Category Image */}
             <div>
               <label className="block text-sm font-semibold text-white mb-2">
-                Image URL
+                Category Image
               </label>
               <input
-                type="url"
-                {...register("image_url")}
-                className="w-full px-4 py-2.5 bg-[#252525] border border-[#333333] rounded-lg text-white placeholder-[#666666] focus:outline-none focus:border-[#E84A2F] transition-colors"
-                placeholder="https://example.com/image.jpg"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleUploadImage}
+                disabled={isUploadingImage}
+                className="w-full px-4 py-2.5 bg-[#252525] border border-[#333333] rounded-lg text-white file:mr-4 file:px-4 file:py-2 file:rounded-lg file:border-0 file:bg-[#E84A2F] file:text-white file:font-semibold hover:file:bg-[#D63A1F] file:transition-colors disabled:opacity-50"
               />
               <p className="text-xs text-[#999999] mt-1">
-                Paste the full URL to an image
+                {isUploadingImage
+                  ? "Uploading image..."
+                  : "Upload a JPG, PNG, or WebP image up to 5MB."}
               </p>
+              {imageUrl && (
+                <div className="mt-3 flex items-center gap-3 bg-[#252525] border border-[#333333] rounded-lg p-3">
+                  <Image
+                    src={imageUrl}
+                    alt="Category image preview"
+                    width={64}
+                    height={64}
+                    className="h-16 w-16 rounded-lg object-cover bg-[#1A1A1A]"
+                  />
+                  <span className="flex-1 text-sm text-[#999999] truncate">
+                    Category image added
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className="text-red-400 hover:text-red-300 transition-colors"
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Display Order */}
@@ -242,10 +315,14 @@ export function CategoryForm({
               </button>
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isUploadingImage}
                 className="flex-1 px-4 py-2.5 rounded-lg bg-[#E84A2F] text-white font-semibold hover:bg-[#D63A1F] disabled:opacity-50 transition-colors"
               >
-                {isSubmitting ? "Saving..." : "Save Category"}
+                {isSubmitting
+                  ? "Saving..."
+                  : isUploadingImage
+                    ? "Uploading..."
+                    : "Save Category"}
               </button>
             </div>
           </form>

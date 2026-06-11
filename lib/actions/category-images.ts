@@ -11,28 +11,28 @@ import {
   validateCloudinaryImageFile,
 } from "@/lib/cloudinary";
 
-const PRODUCT_IMAGES_FOLDER = "the-funzo/products";
+const CATEGORY_IMAGES_FOLDER = "the-funzo/categories";
 
-export async function uploadProductImage(formData: FormData) {
+export async function uploadCategoryImage(formData: FormData) {
   try {
     const adminEmail = await requireAdmin();
 
-    if (!checkRateLimit(`${adminEmail}:upload_product_image`, 40, 3600000)) {
+    if (!checkRateLimit(`${adminEmail}:upload_category_image`, 30, 3600000)) {
       throw new Error("Too many image uploads. Please try again later.");
     }
 
     const file = formData.get("image");
 
     if (!(file instanceof File)) {
-      throw new Error("Product Image is required");
+      throw new Error("Category Image is required");
     }
 
-    validateCloudinaryImageFile(file, "Product Image");
-    const upload = await uploadImageToCloudinary(file, PRODUCT_IMAGES_FOLDER);
+    validateCloudinaryImageFile(file, "Category Image");
+    const upload = await uploadImageToCloudinary(file, CATEGORY_IMAGES_FOLDER);
 
-    await createAuditLog("UPLOAD", "product_image", upload.public_id, {
+    await createAuditLog("UPLOAD", "category_image", upload.public_id, {
       provider: "cloudinary",
-      folder: PRODUCT_IMAGES_FOLDER,
+      folder: CATEGORY_IMAGES_FOLDER,
       fileName: file.name,
       size: file.size,
       type: file.type,

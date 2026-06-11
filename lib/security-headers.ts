@@ -54,7 +54,7 @@ export const securityHeaders = {
     "default-src 'self'; " +
     `script-src ${scriptSrc}; ` +
     "style-src 'self' 'unsafe-inline' fonts.googleapis.com; " +
-    "img-src 'self' data: https: *.supabase.co *.vercel.app unsplash.com *.unsplash.com images.unsplash.com; " +
+    "img-src 'self' data: https: res.cloudinary.com *.supabase.co *.vercel.app unsplash.com *.unsplash.com images.unsplash.com; " +
     "font-src 'self' data: fonts.gstatic.com; " +
     `connect-src ${connectSrc}; ` +
     "frame-src 'self' https://www.google.com https://maps.google.com; " +
